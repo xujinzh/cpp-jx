@@ -18,3 +18,32 @@ C++ 最初由 Bjarne Stroustrup 在 1979 年于贝尔实验室开发。它是在
 - 桌面应用程序：用于构建复杂的桌面应用程序。
 - 服务器应用和后台系统：在构建高性能的服务器端应用和数据库方面也发挥着重要作用。
 
+# HelloWorld
+目录结构如下：
+```bash
+xcpp001helloword
+└── src
+    ├── helloworld
+    └── helloworld.cpp
+
+2 directories, 2 files
+```
+
+代码：
+```c++
+#include <iostream>
+
+int main()
+{
+    std::cout << "hello, world" << std::endl;
+    // return 0; // C++ main function will return 0 by default, so this line is optional.
+}
+```
+编译：
+```bash
+g++ -std=c++11 helloworld.cpp -o helloword
+```
+执行：
+```bash
+./helloword
+```
