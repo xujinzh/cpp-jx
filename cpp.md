@@ -21,12 +21,13 @@ C++ 最初由 Bjarne Stroustrup 在 1979 年于贝尔实验室开发。它是在
 # HelloWorld
 目录结构如下：
 ```bash
-xcpp001helloword
+../../xcpp001helloword
+├── build
+│   └── helloword
 └── src
-    ├── helloworld
     └── helloworld.cpp
 
-2 directories, 2 files
+3 directories, 2 files
 ```
 
 代码：
@@ -41,9 +42,9 @@ int main()
 ```
 编译：
 ```bash
-g++ -std=c++11 helloworld.cpp -o helloword
+g++ -std=c++11 helloworld.cpp -o ../build/helloword
 ```
 执行：
 ```bash
-./helloword
+../build/helloword
 ```
