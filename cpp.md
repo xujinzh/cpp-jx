@@ -33,10 +33,35 @@ C++ 最初由 Bjarne Stroustrup 在 1979 年于贝尔实验室开发。它是在
 代码：
 ```c++
 #include <iostream>
+#include <unistd.h> // for pause() function on Unix-like systems
+using namespace std;
 
 int main()
 {
+    // 这里表示单行注释
+    /* 这里表示多行注释
+        多行注释可以换行
+    */
+
+
+    // std 表示命名空间namespace，在一个文件中指定命名空间，可以避免冲突
+    // :: 是作用域解析运算符，表示使用某个命名空间下的成员
     std::cout << "hello, world" << std::endl;
+    cout << "hello, world" << endl; // 因为上面使用了命名空间 std， 所以这里可以省略 std::
+
+
+    // 提示用户输入姓名
+    std::cout << "请输入您的姓名：" << endl;
+    // 用一个变量来保存键盘的输入信息
+    string name; // string 是C++标准库中表示字符串的类型
+    std::cin >> name; // 从键盘输入信息，并保存到变量 name 中
+    // 输出欢迎信息
+    std::cout << "欢迎您，" << name << "!" << std::endl;
+
+
+    // system("pause"); // windows系统下让程序在结束前暂停，方便查看输出结果
+    pause(); // ctrl+c 结束程序，适用于Unix-like系统
+    // cin.get(); // 让程序在结束前暂停，等待用户按下回车键
     // return 0; // C++ main function will return 0 by default, so this line is optional.
 }
 ```
@@ -47,4 +72,82 @@ g++ -std=c++11 helloworld.cpp -o ../build/helloword
 执行：
 ```bash
 ../build/helloword
+```
+
+# 函数
+## 调用函数
+代码结构：
+```bash
+│       └── helloworld.cpp
+└── xcpp002func
+    ├── build
+    │   └── main
+    └── src
+        ├── main.cpp
+        └── welcome.cpp
+
+7 directories, 5 files
+```
+main.cpp
+```c++
+#include <iostream> // for std::cout, std::cin and std::endl;
+#include <unistd.h> // for pause()
+
+// function declaration
+void welcome();
+
+// function definition
+void greet() {
+    std::cout << "please input your name: " << std::endl;
+    std::string name;
+    std::cin >> name;
+    std::cout << "hello, " << name << std::endl;
+
+    return;
+}
+
+/*
+main function
+*/
+int main() {
+    greet();
+
+    welcome();
+    // // keep the console window open in debug mode
+    // // use two std::cin.get() to wait for the second enter key
+    // std::cin.get();
+    // std::cin.get();
+
+    pause(); // ctrl + c to exit
+    return 0;
+
+}
+```
+welcome.cpp
+
+```c++
+#include <iostream>
+
+void welcome() {
+    std::cout << "please input your name: " << std::endl;
+    std::string name;
+    std::cin >> name;
+    std::cout << "hello, " << name << std::endl;
+    return;
+}
+```
+编译代码
+```bash
+g++ -std=c++11 main.cpp welcome.cpp -o ../build/main
+```
+run
+```c++
+../build/main
+```
+
+# 变量
+## 变量的声明和赋值
+```c++
+// 数据类型 变量名;
+int a;
 ```
