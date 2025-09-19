@@ -145,9 +145,103 @@ run
 ../build/main
 ```
 
-# 变量
-## 变量的声明和赋值
+# 变量和数据类型
+## 变量声明
+
+变量的声明和赋值
 ```c++
 // 数据类型 变量名;
 int a;
 ```
+
+## 标识符
+标识符由字母、数字和下划线组成，但是不能以数字开头，标识符是大小写敏感的，长度不限。
+
+C++ 中对变量命名有一些要求和约定俗成的规范：
+1. 不能使用C++关键字
+2. 不能用连续两个下划线开头，也不能以下划线加大写字母开头，这些被C++保留给标准库使用
+3. 函数体外的标识符，不能以下划线开头
+4. 要尽量有实际意义
+5. 变量名一般使用小写字母
+6. 自定义类名一般以大写字母开头
+7. 如果包含多个单词，一般用下划线分隔，或者将后面的单词首字母大写
+
+C++关键字：
+|关键字|关键字|关键字|关键字|关键字|
+|--|--|--|--|--|
+|alignas|continue|friend|register|true|
+|alignof|decltype|goto|reinterpret_cast|try|
+|asm|default|if|return|typedef|
+|auto|delete|inline|short|typeid|
+|bool|do|int|signed|typename|
+|break|double|long|sizeof|union|
+|case|dynamic_cast|mutable|static|unsigned|
+|catch|else|namespace|static_assert|using|
+|char|enum|new|static_cast|virtual|
+|char16_t|explicit|noexcept|struct|void|
+|char32_t|export|nullptr|switch|volatile|
+|class|extern|operator|template|wchar_t|
+|const|false|private|this|while|
+|constexpr|float|protected|thread_local|throw|
+|const_cast|for|public|||
+
+C++ 中使用的一些运算操作符的替代名：
+|运算符|运算符|运算符|运算符|运算符|运算符|
+|--|--|--|--|--|--|
+|and|bitand|compl|not_eq|or_eq|xor_eq|
+|and_eq|bitor|not|or|xor||
+
+## 作用域
+C++ 中全局变量在所有函数外部声明，作用域覆盖整个程序，生命周期从程序开始到结束，存储在全局存储区；局部变量在函数或代码块内部声明，作用域仅限于其定义的{}内，生命周期仅限于其作用域内，存储在栈区。两者主要区别在于作用域、生命周期和存储位置
+```c++
+#include <iostream>
+
+// 全局变量声明时可以不用初始化，使用默认值
+int number; // 全局变量
+
+int main() {
+    // variable declaration
+    int a = 1, b;
+    std::cout << "a = " << a << std::endl;
+    b = 10;
+    std::cout << "b = " << b << std::endl;
+    b = 25;
+    std::cout << "b = " << b << std::endl;
+    
+    // 定义局部变量；局部变量声明时，或者后面必须初始化；
+    // 否则使用未初始化的局部变量会导致不可预期的结果
+    int number;
+    number = 20;
+    std::cout << "number = " << number << std::endl;
+    std::cout << "global number = " << ::number << std::endl; // 访问全局变量
+
+}
+```
+
+## 常量
+保存的数据不能更改，这种特殊的变量被叫做“常量”，C++中有两种方式可以定义常量：
+1. 使用符号常量
+这种方式是在文件头用#define来定义常量，也叫作“宏定义”
+```c++
+// 没有数据类型的定义
+// 宏定义常量约定用全大写
+#define ZERO 0
+```
+跟 #include 一样，“#”号开头的语句都是“预处理语句”，在编译之前，预处理器会查找程序中所有的“ZERO”，并把它替换成0，这种宏定义的方式是保留的C语言特性，在C++中一般不推荐。
+2. 使用const限定符
+这种方式跟定义一个变量是一样的，只需要在变量的数据类型前再加上一个 const 关键字，这被称为"限定符"
+```c++
+// 定义常量；声明时必须初始化
+// 约定首字母大写
+const int Zero = 0;
+
+// 不能修改常量值
+Zero = 10; // error
+```
+
+## 基本数据类型
+C++支持丰富的数据类型，它内置了一套基本数据类型，也为我们提供了自定义类型的机制。
+
+基本数据类型主要包括算术类型和空类型（void）。算术类型包含整型和浮点型，空类型不对应具体的值，只用在一些特定的场合，比如一个函数如果不返回任何只，可以用 void 作为它的返回类型。
+
+### 整型
