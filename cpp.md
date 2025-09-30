@@ -245,3 +245,137 @@ C++支持丰富的数据类型，它内置了一套基本数据类型，也为�
 基本数据类型主要包括算术类型和空类型（void）。算术类型包含整型和浮点型，空类型不对应具体的值，只用在一些特定的场合，比如一个函数如果不返回任何只，可以用 void 作为它的返回类型。
 
 ### 整型
+计算机中所有数据都是以二进制 0，1 来表示的，每个叫做一位 bit，而计算机可寻址的内存最小单元是 8 位，即一个字节 byte。
+
+C++ 定义了多种整数类型，包括 char, short, int, long, C++11 新增了 long long 类型，此外，特殊的布尔类型  bool 本质上也是整型。
+
+|类型|含义|最小尺寸（具体依据操作系统）|
+|--|--|--|
+|bool|布尔类型|未定义|
+|char|字符|8位，1个字节|
+|short|短整型|16位，最小2字节|
+|int|整型|16位，最小2字节，不能比short短|
+|long|长整型|32位，最小4字节，不能比int短|
+|long long | 长整型|64位，至少8字节，不能比long 短|
+
+C++ 中对不同整型类型占据的长度定义比较灵活，这样不同的计算机平台就可以有自己的实现（这根C是一样的）。
+
+现在一般系统中，short和long 都选择最小长度，也就是short占2个字节， long占4个字节， long long 占8个字节。但是 int 则有不同的选择，一般使用的电脑操作系统（windows7, windows10, macos等）的实现中，int都是4字节的。
+
+short 表示的数有 $2^{16}=65536$个，考虑正负，范围是 -32768 $\sim$ 32768; 而 int 能表示的数范围则为 $-2^{31} \sim 2^{31} - 1$，大概是20亿。
+
+### 无符号整型
+整型默认是可正可负的，如果只想表示正数和0，那么所能表示的范围就会增大一倍。如 16 位的 short 类型，不考虑负数，表示范围是 0 $\sim$ 65535。C++ 中，short, int, long, long long 都有各自的无符号版本。只需要在定义类型时前面增加上 unsigned
+
+需要注意，当数值超出了整型表示的范围，程序本身并不会报错，而是会让数值回到能表示的最小值，这种情况叫做“数据溢出”或者“算术溢出”。
+
+由于整型的类型太多，在实际应用中使用整型可以只考虑三个原则：
+- 一般的整数计算，全部用 int；
+- 如果数值超出了 int 的表示范围，用 long long;
+- 确定数值不可能为负时，用无符号类型（如统计人数、销售额等）
+
+```c++
+#include <iostream>
+
+int main() {
+    short a = 10;
+    std::cout << "a = " << a << std::endl;
+    std::cout << "sizeof(a) = " << sizeof(a) << std::endl;
+    std::cout << "sizeof a = " << sizeof a << std::endl;
+    std::cout << "sizeof(short) = " << sizeof(short) << std::endl;
+ 
+    int a2 = 10;
+    std::cout << "a2 = " << a2 << std::endl;
+    std::cout << "sizeof(a2) = " << sizeof(a2) << std::endl;
+    std::cout << "sizeof a2 = " << sizeof a2 << std::endl;
+    std::cout << "sizeof(int) = " << sizeof(int) << std::endl;
+
+    long long a3 = 10;
+    std::cout << "a3 = " << a3 << std::endl;
+    std::cout << "sizeof(a3) = " << sizeof(a3) << std::endl;
+    std::cout << "sizeof a3 = " << sizeof a3 << std::endl;
+    std::cout << "sizeof(long long) = " << sizeof(long long) << std::endl;
+
+    unsigned short a4 = 32768;
+    std::cout << "a4 = " << a4 << std::endl;
+    std::cout << "sizeof(a4) = " << sizeof(a4) << std::endl;
+    std::cout << "sizeof a4 = " << sizeof a4 << std::endl;
+    std::cout << "sizeof(unsigned short) = " << sizeof(unsigned short) << std::endl;
+    
+    return 0;
+}
+```
+
+### char 类型
+如果我们只需要处理很小的整数，也可以用另外一种特殊的整型类型 char，它通常只占一个字节。不过 char 类型一般并不用在整数计算，它更重要的用途是表示字符。
+
+计算机底层的数据都是二进制位表示的，这用来表示一个整数当然没有问题，怎么表示字母呢，这就需要将字母、以及一些特殊符号对应到一个个的数字上，然后保存下来，这就是“编码”的过程。
+
+最常用的字符编码集就是 ASCII 码，它用 0 $\sim$ 127 表示了128个字符，这包括了所有的大小写字母、数字、标点符号、特殊符号以及一些计算机的控制符。比如字母"A"的编码是65，数字字符"0"的编码是48.
+
+在程序中如果使用 char 类型的变量，我们会发现，打印出来就是一个字符，而它的底层是一个整数，也可以做整数计算。
+
+char 类型用来表示整数时，到底是有符号还是无符号呢，之前所有的整型，默认都是有符号的，而 char 并没有默认类型，而是需要 C++ 编译器根据需要自己决定。
+
+所以把 char 当做小整数时，有两种显式的定义方式：signed char 和 unsigned char; 至于 char 定义出来的到底带不带符号，就看编译器的具体实现了。
+
+另外，C++ 还对字符类型进行了“扩容”，提供了一种“宽字符”类型 wchar_t，其会在底层对应另一种类型（比如short或者int），具体占几个字节要看系统中的实现。
+
+wchar_t 会随着具体实现而变化，不够稳定；所以在 C++11 新标准中，还为 Unicode 字符集提供了专门的扩展字符类型：char16_t 和 char32_t，分别长 16 位和 32 位。
+
+|类型|字符 |位数|
+|--|--|--|
+|char|字符|8位|
+|wchar_t|宽字符|16位|
+|char16_t|Unicode字符|16位|
+|char32_t|Unicode字符|32位|
+
+```c++
+#include <iostream>
+
+int main() {
+    char a = 65;
+    char b = 'A';
+    std::cout << "a: " << a << std::endl;
+    std::cout << "b: " << b << std::endl;
+
+    std::cout << "b + 1: " << (b + 1) << std::endl;
+    char c = b + 1;
+    std::cout << "c: " << c << std::endl;
+    return 0;
+}
+```
+
+### bool 类型
+在程序中，往往需要针对某个条件做判断，结果只有两种：“成立”和“不成立”；如果用逻辑语言来描述，就是“真”和“假”。真值判断是二元的，所以在 C 语言中，可以很简单地用“1”表示“真”，用“0”表示“假”。
+
+C++ 支持 C 语言中的这种定义，同时为了让代码更容易理解，引入了一种新的数据类型，布尔类型 bool（来自英国数学家布尔）。该类型只有两个取值：true 和 false，这样就可以非常明确地表示逻辑真假了。bool 类型通常占用 8 位。
+
+```c++
+#include <iostream>
+
+int main() {
+    bool b1 = true;
+    bool b2 = false;
+    std::cout << "b1: " << b1 << std::endl;
+    std::cout << "b2: " << b2 << std::endl;
+
+    std::cout << std::boolalpha; // Enable boolalpha to print bool as true/false
+    std::cout << "b1 (boolalpha): " << b1 << std::endl;
+    std::cout << "b2 (boolalpha): " << b2 << std::endl;
+
+    std::cout << std::noboolalpha; // Disable boolalpah
+    std::cout << "bool len: " << sizeof(bool) << std::endl;
+    
+    return 0;
+
+}
+```
+
+可以看到，true 和 false 可以直接赋值给 bool 类型的变量，打印输出的时候，true 就是 1，false 就是 0，这跟 C 语言里的表示其实是一样的。
+
+### 浮点类型
+浮点类型用来表示小数，主要有单精度 float 和双精度 double 两种类型，double 的长度不会小于 float。通常，float 会占用 4 个字节（32位），而 double 会占用 8 个字节（64位）。此外，C++ 还提供了一种扩展的高精度类型 long double，一般会占 12 或 16 个字节。
+
+除了一般的小数，在 C++ 中，还提供了另外一种浮点数的表示法，那就是科学计数法，也叫作“E表示法”。比如：5.98E24表示5.98 $\times 10^{24}$，9.11e-31 表示 $9.11\times 10^{-31}$.
+
