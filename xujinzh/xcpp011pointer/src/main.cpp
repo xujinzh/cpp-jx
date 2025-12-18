@@ -18,10 +18,24 @@ int main() {
     std::cout << "p4 = " << p4 << std::endl;
 
     int* p5;
-    p5 = NULL;
+    p5 = NULL; // #define NULL 0
     std::cout << "p5 = " << p5 << std::endl;
 
     int* p6;
-    p6 = 0;
+    p6 = 0; // 相当于没有指向任何对象
     std::cout << "p6 = " << p6 << std::endl;
+
+    int* p7;
+    // std::cout << "*p7 = " << *p7 << std::endl; // segmentation fault (core dumped) 
+
+    int i = 10;
+    std::string s = "hello";
+
+    void* p8 = &i;
+    p8 = &s;
+
+    std::cout << "p8 = " << p8 << std::endl;
+    std::cout << "the length of p8 = " << sizeof(p8) << std::endl;
+    // std::cout << "*p8 = " << *p8 << std::endl; // 错误，不能通过 void* 指针访问对象
+
 }
