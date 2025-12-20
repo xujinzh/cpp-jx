@@ -25,7 +25,8 @@ int main() {
     p6 = 0; // 相当于没有指向任何对象
     std::cout << "p6 = " << p6 << std::endl;
 
-    int* p7;
+    // 无效指针，野指针
+    // int* p7;
     // std::cout << "*p7 = " << *p7 << std::endl; // segmentation fault (core dumped) 
 
     int i = 10;
@@ -38,4 +39,13 @@ int main() {
     std::cout << "the length of p8 = " << sizeof(p8) << std::endl;
     // std::cout << "*p8 = " << *p8 << std::endl; // 错误，不能通过 void* 指针访问对象
 
+    std::cout << "=========指针与数组=========" << std::endl;
+    int arr[] = {1, 2, 3, 4, 5};
+    int* parr = arr;
+    // 使用指针访问数组的第一个元素
+    std::cout << "*parr = " << *parr << std::endl;
+    // 将数组名看作指针，访问数组的第一个元素，效果类似于 arr[0]
+    std::cout << "*arr = " << *arr << std::endl;
+    // 使用数组名指针访问第二个元素，效果类似于 arr[1]
+    std::cout << "*(arr + 1) = " << *(arr + 1) << std::endl;
 }
