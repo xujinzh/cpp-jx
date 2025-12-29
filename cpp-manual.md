@@ -2768,3 +2768,458 @@ int search(const int (&a) [10], int start, int end, int target)
 
 可以看出，快排也应用了分治思想，一般会用递归来实现。
 
+```c++
+#include <iostream>
+
+using namespace std;
+
+void swap(int (&)[10], int, int);
+int partition(int (&)[10], int, int);
+void quickSort(int (&)[10], int, int);
+void printArr(const int (&)[10]);
+
+int main()
+{
+    int arr[10] = {23, 45, 18, 6, 11, 19, 22, 18, 123, 9};
+    printArr(arr);
+
+    int size = sizeof(arr) / sizeof(arr[0]);
+    quickSort(arr, 0, size - 1);
+    printArr(arr);
+}
+
+// 交换数组中的两个元素
+void swap(int (&arr)[10], int i, int j)
+{
+    int temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+
+// 按照支点进行分区的函数
+int partition(int (&arr)[10], int start, int end)
+{
+    // 选取支点
+    int pivot = arr[start];
+    // 指定指向数组头尾元素的“指针”
+    int left = start, right = end;
+    // 只要 left 与 right 不相遇，left 向右移动，right想左移动
+    while (left < right)
+    {
+        // 左指针不停右移，找到一个比支点大的值
+        while (arr[left] <= pivot && left < right)
+        {
+            ++left;
+        }
+        // 右指针不停左移，找到一个比支点小的值
+        while (arr[right] >= pivot && left < right)
+        {
+            --right;
+        }
+        // 左右互换
+        swap(arr, left, right);
+    }
+
+    // 判断指针相遇位置的值，跟支点值的大小关系
+    if (arr[left] <= pivot)
+    {
+        // 比支点值小，就直接换到数组的头位置
+        swap(arr, start, left);
+        return left;
+    }
+    else
+    {
+        // 比支点值大，就将前一个位置的元素直接换到数组的头位置
+        swap(arr, start, left - 1);
+        return left - 1;
+    }
+}
+
+// 快速排序函数
+void quickSort(int (&arr)[10], int start, int end)
+{
+    /**
+     * 递归实现数组快速排序
+     */
+    // 基准情况，首尾两个指针相等
+    if (start >= end)
+    {
+        return;
+    }
+    // 支点
+    int pivot = partition(arr, start, end);
+    // 对支点左右部分进行递归调用
+    quickSort(arr, start, pivot - 1);
+    quickSort(arr, pivot + 1, end);
+}
+
+// 打印输出数组
+void printArr(const int (&arr)[10])
+{
+    for (int num : arr)
+    {
+        cout << num << "\t";
+    }
+    cout << endl;
+}
+```
+
+# 函数高阶
+
+函数式模块化编程思想的重要体现，相对于C语言，C++提供了很多新的函数特性。
+
+## 内联函数
+
+内联函数是C++为了提高允许速度做的一项优化。
+
+函数让代码更加模块化，可重用性、可读性大大提高。不过函数也有一个缺点：函数调用需要执行一系列额外操作，会降低程序运行效率。
+
+为了解决这个问题，C++引入了“内联函数”的概念。使用内联函数时，编译器不再去做常规的函数调用，而是把它在调用点上“内联”展开，也就是直接用函数代码替换函数调用。
+
+### 内联函数的定义
+
+定义内联函数，只需要在函数声明或函数定义前加上 `inline` 关键字。
+
+如：
+
+```c++
+inline const string& longerStr(const string& str1, const string& str2)
+{
+    return str1.size() > str2.size() ? str1 : str2;
+}
+```
+
+当我们试图打印输出调用结果时：
+
+```c++
+cout << longerStr(str1, str2) << endl;
+```
+
+编译器会自动把它展开为
+
+```c++
+cout << (str1.size() > str2.size() ? str1 : str2) << endl;
+```
+
+这样就大大提高了运行效率。
+
+### 内联函数和宏
+
+内联函数是 C++ 新增的特性。在 C 语言中，类似功能是通过预处理语句 `#define` 定义“宏”来实现的。
+
+然后C中宏本身并不是函数，无法进行值传递，它的本质是文本替换，我们一般只用宏来定义常量。用宏实现函数的功能会比较麻烦，而且可读性较差，所以在C++中，一般都会用内联函数来取代C中的宏。
+
+## 默认实参
+
+在有些场景中，当调用一个函数时，它的某些形参一般都会被赋一个固定的值。为了简单起见，我们可以给它设置一个默认值，这样就不用每次都传同样的值了。
+
+这种会反复出现的默认值，称为函数的默认实参。当调用了一个有默认实参的函数时，这个实参可以省略。
+
+### 定义带默认实参的函数
+
+我们用一个 `string` 对象表示学生基本信息，调用函数时应传入学生的姓名、年龄和平均成绩。对于这些参数，我们可以指定默认实参：
+
+```c++
+#include <iostream>
+#include <string>
+using namespace std;
+
+string stuInfo(string name = "", int age = 18, double score = 60)
+{
+    string info = "student's name: " + name + "\t age: " + to_string(age) + "\t score: " + to_string(score);
+    return info;
+}
+```
+
+定义默认实参，形式上就是给形参做初始化。这里在整合学生信息时，使用了运算符 `+` 进行字符串拼接，并且调用 `to_string` 函数将 `age` 和 `score` 转换成了 `string`。
+
+这里需要注意，一旦某个形参被定义了默认实参，那它后面的所有形参都必须有默认实参。也就是说，所有默认实参的指定，应该在形参列表的末尾。
+
+调用赋值时，必须按照顺序依次赋值，不能跳过形参，如 `stuInfo(19)`，跳过了姓名，是不对的，可以改为 `stuInfo("zs", 19)`。
+
+## 函数重载
+
+在C++中，同一作用域下，同一个函数名可以定义多次，前提是形参列表不同。这种名字相同但形参列表不同的函数，叫做重载函数。这是C++相对C语言的重大改进，也是面向对象的基础。
+
+### 定义重载函数
+
+在上一章数组形参部分，我们曾经实现过几个不同的打印数组的函数，它们是可以同时存在的。
+
+```c++
+// 使用指针和长度作为形参
+void printArr(const int *arr, int size)
+{
+    for (int i = 0; i < size; ++i)
+    {
+        cout << arr[i] << "\t";
+    }
+    cout << endl;
+}
+
+// 使用数组引用作为形参
+void printArr(const int (&arr)[6])
+{
+    for (int num : arr)
+    {
+        cout << num << "\t";
+    }
+    cout << endl;
+}
+```
+
+需要注意：
+- 重载的函数，应该在形参的数量或者类型上有所不同；
+- 形参的名称在类型中可以省略，所以只有形参名不同的函数是一样的；
+- 调用函数时，编译器会根据传递的实参个数和类型，自动推断使用哪个函数；
+- 主函数不能重载。
+
+### 有 const 形参时的重载
+
+当形参有 const 修饰时，要区分它对于实参的要求到底是什么，是否要进行值的拷贝。如果是传值参数，传入实参时会发生值的拷贝，那么实参是变量还是常量其实是没有区别的。
+
+```c++
+void fun(int x);
+
+void fun(const int x);  // int 常量做形参，跟不加 const 等价
+
+int i = 10;
+const int ci = i; // 正确
+
+
+void fun2(int *p); 
+void fun2(int* const p); // 指针常量做形参，也跟不加 const 等价
+```
+
+这种情况下，`const` 不会影响传入函数的实参类型，所以跟不加 `const` 的定义是一样的，这叫做顶层 `const`。这时两个函数相同，无法进行函数重载。
+
+另一种情况则不同，那就是传引用参数。这时如果有 `const` 修饰，就成了常量的引用，对于一个常量，只能用常量引用来绑定，而不能使用普通引用。
+
+类似地，对于一个常量的地址，只能由指向常量的指针来指向它，而不能用普通指针。
+
+```c++
+void fun(int &x);
+void fun(const int &x); // 形参类型是常量引用，这是一个新函数
+
+void fun(int *p);
+void fun(const int *p); // 形参类型是指向常量的指针，这是一个新函数
+
+void fun(int *p);
+void fun(const int *p);
+```
+
+这种情况下，`const` 限制了间接访问的数据对象是常量，这叫做底层 `const`。当实参是常量时，不能对不带 `const` 的引用进行初始化，所以只能调用常量引用做形参的函数，而如果实参是变量，就会优先匹配不带 `const` 的普通引用，这就实现了函数重载。
+
+### 函数匹配
+
+如果传入的实参跟形参类型不同，只要能通过隐式类型转换变成需要类型，函数也可以正确调用。那假如有几个不同的重载函数，它们的形参类型可以进行自动转换，这时传入实参应该调用哪个函数呢？例如：
+
+```c++
+void f();
+void f(int x);
+void f(int x, int y);
+void f(double x, double y = 1.5);
+
+f(3.14); // 应该调用哪个函数
+```
+
+确定到底调用哪个函数的过程叫做函数匹配。
+
+1. 候选函数
+
+函数匹配的第一步就是确定候选函数，也就是先找到对应的重载函数集。候选函数有两个要求：
+- 与调用的函数同名；
+- 函数的声明，在函数的调用点是可见的
+
+所以上面的例子中，一共有4个叫做`f`的函数，它们都是候选函数。
+
+2. 可行函数
+
+接下来需要从候选函数中，选出跟传入的实参匹配的函数，这些函数叫做可行函数，可行函数也有两个要求：
+- 形参个数与调用传入的实参数量相等；
+- 每个实参的类型与对应形参的类型相同，或者可以转换成形参的类型。
+
+上面的例子中，传入的实参只有一个，是一个 `double` 类型的字面值常量，所以可以排除 `f()` 和 `f(int, int)`。而剩下的 `f(int)` 和 `f(double, double = 1.5)` 都是匹配的，所以有 2 个可行函数。
+
+3. 寻找最佳匹配
+
+最后就是在可行函数中，选择最佳匹配。简单来说，实参类型与形参类型越接近匹配的越好。所以，能不进行转换就实际匹配的，要优于需要转换的。
+
+上面的例子中，`f(int)` 必须要将 `double` 类型的实参转换成 `int`，而 `f(double, double = 1.5)` 不需要，所以后者是最佳匹配，最终调用的就是它。第二个参数会由默认实参 1.5 来填补。
+
+4. 多参数的函数匹配
+
+如果实参的数量不止一个，那么就需要逐个比较每个参数，同样，类型能够精确匹配的要优于需要转换的，这是寻找最佳匹配的原则如下：
+- 如果可行函数的所有形参都能精确匹配实参，那么它就是最佳匹配
+- 如果没有全部精确匹配，那么当一个可行函数所有参数的匹配，都不比别的可行函数差、并且至少有一个参数要更优，那它就是最佳匹配。
+
+5. 二义性调用
+
+如果检查所有实参之后，有多个可行函数不分优劣、无法找到一个最佳匹配，那么编译器会报错，这被称为二义性调用：
+
+```c++
+f(10, 3.14); // 二义性调用
+```
+
+这时的可行函数为 `f(int, int)` 和 `f(double, double = 1.5)`，第一个实参为 `int` 类型，`f(int, int)`占有，第二个实参为 `double` 类型，`f(double, double = 1.5)` 占优，这时两个可行函数分不出胜负，于是就会报二义性调用错误。
+
+
+### 重载与作用域
+
+重载是否生效，跟作用域是有关系的。如果在内存、外层作用域分别声明了同名的函数，那么内层作用域中的函数会覆盖外层的同名实体，让它隐藏起来。
+
+不同的作用域中，是无法重载函数名的。
+
+```c++
+#include <iostream>
+
+using namespace std;
+
+void print(double d)
+{
+    cout << "d: " << d << endl;
+}
+
+void print(string s)
+{
+    cout << "s: " << s << endl;
+}
+
+int main()
+{
+    // 调用之前做函数声明
+    void print(int i); // 此处的声明会覆盖外层的声明
+    print(10);
+    print(3.14); // 将3.14转换为3，然后调用
+    print("hello"); // 错误，因为main函数内部的函数print声明覆盖了外面的重载函数
+}
+```
+
+## 函数指针
+
+一类特殊的指针，指向的不是数据对象而是函数，这就是函数指针。
+
+### 声明函数指针
+
+函数指针本质还是指针，它的类型和所指向的对象类型有关。现在指向的是函数，函数的类型由它返回类型和形参类型共同决定的，跟函数名、形参名都没有关系。例如
+
+```c++
+#include <iostream>
+using namespace std;
+
+string stuInfo(string name, int age, double score)
+{
+    string info = "name: " + name + "\t age: " + to_string(age) + "\t score: " + to_string(score);
+    return info;
+}
+```
+
+它的类型就是 `string(string, int, double)`.
+
+如果要声明一个指向它的指针，只要把原先函数名的位置填上指针就可以了：
+
+```c++
+string (*fp) (string, int, double); // 一个函数指针
+```
+
+注意，这里指针两侧的括号不可少，如果去掉，就是表示一个函数，返回 `string *` 类型的函数：
+
+```c++
+string *fp (string, int, double); // 这是一个函数，返回值为指向 string 的指针
+```
+
+更加复杂的例子也是一样，例如：
+
+```c++
+const string& longerStr(const string &str1, const string &str2)
+{
+    return str1.size() > str2.size() ? str1 : str2;
+}
+
+// 对应类型的函数指针
+const string &(*fp) (const string &, const string &);
+```
+
+### 使用函数指针
+
+当一个函数名后面跟调用操作符（小括号），表示函数调用，而单独使用函数名作为一个值时，函数会自动转换成指针。这一点跟数组名类似。
+
+所以可以直接使用函数名给函数指针赋值：
+
+```c++
+fp = longerStr; // 直接将函数名作为指针赋给 fp
+
+// 也可以加上取地址符 &，这和不加 & 是等价的
+fp = &longerStr; // 取地址符是可选的，和上面没有区别
+```
+
+赋值之后，就可以通过 `fp` 调用函数了。`fp` 做解引用可以得到函数，而这里解引用符 `*` 也是可选的，不做解引用同样可以直接表示函数。
+
+```c++
+cout << fp("hello", "world") << endl;
+
+cout << (*fp)("hello", "world") << endl;
+```
+
+所以这里能够看出，函数指针完全可以当做函数来使用。
+
+在对函数指针赋值时，函数的类型必须精确匹配。当然，函数指针也可以赋值 `nullptr`，表示空指针，没有指向任何一个函数。
+
+### 函数指针作为形参
+
+有了指向函数的指针，就给函数带来了更加丰富灵活的用法。比如，可以将函数指针作为形参，定义在另一个函数中，也就是说，可以定义一个函数，它以另一个函数类型作为形参。当然，函数本身不能作为形参，不过函数指针完美地填补了这个空缺。这一点上，函数跟数组非常类似。
+
+```c++
+void selectStr(const string &s1, const string &s2, const string &fp(const string&, const string&));
+
+void selectStr(const sting &s1, const string &s2, const string &(*fp)(const string&, const string&));
+```
+
+同样地，上面两种形式是等价的，解引用符 `*` 是可选的。
+
+很明显，对于函数类型和函数指针类型来说，这样的定义太过复杂，所以有必要使用 `typedef` 做一个类型别名的声明。
+
+```c++
+typedef const string& Func(const string&, const string&); // 函数类型
+typedef const string& (*FuncP)(const string&, const string&); // 函数指针类型
+
+// 函数指针形参简化为
+void selectStr(const sting &s1, const string &s2, Func);
+```
+
+当然，还可以用 C++11 提供的 `decltype` 函数直接获取类型，更加简洁：
+
+```c++
+// 从某个函数提取函数类型
+typedef decltype(longerStr) Func2;
+typedef decltype(longerStr) *FuncP2;
+
+// 然后约简函数指针作为形参
+void selectStr(const sting &s1, const string &s2, Func2);
+```
+
+### 函数指针作为返回值
+
+类似地，函数不能直接返回另一个函数，但是可以返回函数指针。所以可以将函数指针作为另一个函数的返回值。
+
+这里需要注意，函数的返回类型必须是函数指针，而不能是函数类型：
+
+```c++
+typedef const string& Func(const string&, const string&); // 函数类型
+typedef const string& (*FuncP)(const string&, const string&); // 函数指针类型
+
+// or
+typedef decltype(longerStr) Func;
+typedef decltype(longerStr) *FuncP;
+
+// 函数指针作为返回值
+FuncP fun(int);
+
+Func fun2(int); // 错误，不能直接返回函数
+Func* fun2(int);
+
+// 尾置返回类型
+auto fun3(int) -> FuncP;
+```
+
+另外，可以使用尾置返回类型的方式，指定返回函数指针类型。
+
