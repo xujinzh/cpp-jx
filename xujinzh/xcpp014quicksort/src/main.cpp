@@ -85,9 +85,9 @@ void quickSort(int (&arr)[10], int start, int end)
 // 打印输出数组
 void printArr(const int (&arr)[10])
 {
-    for (int num : arr)
+    for (int num : arr)  // 遍历数组中的每个元素
     {
-        cout << num << "\t";
+        cout << num << "\t";  // 输出当前元素，并在后面添加制表符
     }
-    cout << endl;
+    cout << endl;  // 换行，结束输出
 }
