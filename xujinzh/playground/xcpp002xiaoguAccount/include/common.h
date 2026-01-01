@@ -9,7 +9,7 @@
 // 宏定义常量
 #define INCOME "收入"
 #define EXPAND "支出"
-#define FILENAME "./resources/XiaoGuAccountBook.txt"
+#define FILENAME "../resources/XiaoGuAccountBook.txt"
 // #define FILENAME "/home/jinzhongxu/disk0/codes/cpp/cpp-jx/xujinzh/playground/xcpp002xiaoguAcount/resources/XiaoGuAccountBook.txt"
 
 // 使用命名空间 std
