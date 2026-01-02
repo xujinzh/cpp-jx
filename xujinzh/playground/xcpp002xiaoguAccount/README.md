@@ -8,12 +8,18 @@
 # 编译
 ```c++
 // 建议这种
-cd xcpp002xiaoguAccount/bin
+// 使用makefile
+// 先编写makefile，请查看项目下的 Makefile
+cd xcpp002xiaoguAccount
+make clean
+make
+
+// 在SRC下编译
+cd xcpp002xiaoguAccount/src
 
 g++ -std=c++17 -O3 -march=native -pthread -Wall -o ../bin/xiaogu_account -I ../include *cpp
 
-// 或者
-
+// 或者在项目目录下编译
 cd xcpp002xiaoguAccount
 
 g++ -std=c++17 -O3 -march=native -pthread -Wall -o ./bin/xiaogu_account -I include ./src/*cpp
