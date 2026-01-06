@@ -91,6 +91,9 @@ g++ -c main.s
 # 4. 链接（linking）：生成最后可执行的二进制文件。把所有.o文件、动态链接库等链接在一块。
 # 会保留找到库文件、链接库、找不到函数定义（只声明）等
 g++ main.o -o main
+
+# 编译时生成所有的临时文件: main.ii, main.s, main.o, a.out
+g++ main.cpp --save-temps
 ```
 
 gcc 常用选项：
