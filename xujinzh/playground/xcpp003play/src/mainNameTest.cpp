@@ -11,5 +11,7 @@ int main()
     char c = 67;
     cout << c << endl;
     cout << add(3, 5) << endl;
+
+    cout << __cplusplus << endl; // 输出当前C++标准版本
     return 0;
 } 
