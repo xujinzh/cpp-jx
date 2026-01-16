@@ -5,16 +5,16 @@
 #include <typeinfo>
 #include <boost/type_index.hpp> // 需要先安装该库
 /**
- * 按安装方法
+ * 安装方法
  * 1. 下载：wget https://archives.boost.io/release/1.90.0/source/boost_1_90_0.tar.gz, 访问官网获取最新地址：https://www.boost.org/releases/latest/
  * 2. 解压：tar -xzvf boost_1_90_0.tar.gz
- * 3. 配置：cd boost_1_90_0 && ./booststrap.sh
+ * 3. 配置：cd boost_1_90_0 && ./bootstrap.sh
  * 4. 编译：./b2 -j10
  * 5. 安装：sudo ./b2 install
- * 
+ *
  * 默认安装在 /usr/local/include/boost
  * 使用
- * 
+ *
     #include <iostream>
     #include <boost/algorithm/string.hpp>
 
@@ -26,13 +26,15 @@
     }
  */
 
-
 using namespace std;
 
-void printVector(vector<int> vec) {
-    for (auto v : vec) {
+void printVector(vector<int> &vec)
+{
+    for (auto &v : vec)
+    {
         cout << v << "\t";
     }
+    cout << endl;
 }
 
 int main()
@@ -57,14 +59,24 @@ int main()
     cout << "\033[1;34mend.\033[0m" << endl;
 
     cout << "Type of vi.begin(): " << typeid(vi.begin()).name() << endl;
-    cout << "Type of vi.begin(): " << boost::typeindex::type_id_with_cvr<decltype(vi.begin())>().pretty_name() << endl; 
+    cout << "Type of vi.begin(): " << boost::typeindex::type_id_with_cvr<decltype(vi.begin())>().pretty_name() << endl;
     cout << "Type of vi.end(): " << typeid(vi.end()).name() << endl;
-    cout << "Type of vi.end(): " << boost::typeindex::type_id_with_cvr<decltype(vi.end())>().pretty_name() << endl; 
+    cout << "Type of vi.end(): " << boost::typeindex::type_id_with_cvr<decltype(vi.end())>().pretty_name() << endl;
 
     int a = 3;
-    cout << "Type of a: " << boost::typeindex::type_id_with_cvr<decltype(a)>().pretty_name() << endl; 
+    cout << "Type of a: " << boost::typeindex::type_id_with_cvr<decltype(a)>().pretty_name() << endl;
     double b = 3.14;
-    cout << "Type of b: " << boost::typeindex::type_id_with_cvr<decltype(b)>().pretty_name() << endl; 
+    cout << "Type of b: " << boost::typeindex::type_id_with_cvr<decltype(b)>().pretty_name() << endl;
+
+    vector<int>::iterator ite;
+    for (ite = vi.begin(); ite != vi.end(); ++ite)
+    {
+        cout << *(ite) << "\t";
+    }
+    cout << endl;
+
+    auto iteP = ::find(vi.begin(), vi.end(), 12);
+    cout << *iteP << endl;
 
     cout << "\033[32m======================================================================\033[0m" << endl;
     return 0;
