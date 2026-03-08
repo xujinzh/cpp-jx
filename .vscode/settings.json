@@ -1,3 +1,4 @@
+// 控制vscode编辑器行为、插件配置、编译器路径等项目级设置
 {
     "files.associations": {
         "ostream": "cpp",

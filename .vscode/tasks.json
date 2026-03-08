@@ -1,3 +1,4 @@
+// 执行任务(cmd+shift+B)的时候的设置，也可以被调试器的launch.json自动调用（通过preLaunchTask字段）
 { // 1. 预处理，2. 模板处理，3. 编译，4. 汇编，5. 链接，6. 运行
     "tasks": [
         {
@@ -12,8 +13,7 @@
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}", // 输出的可执行文件命名同 main 函数所在源文件名
                 "-I",
-                "../${fileDirnameBasename}/include", // 头文件都存储在这
-                
+                "${fileDirname}/../include", // 头文件都存储在这
             ],
             "options": {
                 "cwd": "${fileDirname}"

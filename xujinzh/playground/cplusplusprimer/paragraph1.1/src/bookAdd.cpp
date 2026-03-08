@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../include/Sales_item.h"
+#include "Sales_item.h"
 
 /*
 编译

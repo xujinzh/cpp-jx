@@ -1,9 +1,14 @@
+// 告诉C/C++插件，头文件在哪里，使用哪个编译器
+// 这个文件是 Microsoft 的 C/C++ 插件 维护的，用于 代码补全、错误提示、语义分析
 {
     "configurations": [
         {
             "name": "Linux",
             "includePath": [
-                "${fileDirname}/**"
+                "${workspaceFolder}/**", // 告诉编译器搜索当前VSCODE打开的文件夹工作区中的所有子文件夹。即表示当前VSCode打开的工作区根文件夹的绝对路径
+                // "${fileDirname}/../**", // 告诉编译器搜索当前文件所在文件夹绝对路径的上一层目录下的所有子文件夹
+                "/usr/include/**", // Linux 系统按照的包或头文件
+                "/usr/local/include/**" // 自己按照到系统上的第三方包，如boost
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++",
